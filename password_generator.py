@@ -1,31 +1,81 @@
 import random
-import string
+from tkinter import *
+from tkinter.ttk import *
 
-def generate_password(length, complexity):
-    characters = string.ascii_letters + string.digits
-    
-    if complexity == "medium":
-        characters += string.punctuation
-    elif complexity == "high":
-        characters += string.ascii_uppercase + string.punctuation
 
-    password = ''.join(random.choice(characters) for _ in range(length))
-    return password
+def low():
+    entry.delete(0, END)
 
-def main():
-    print("Welcome to the Password Generator!")
+    length = var1.get()
 
-    length = int(input("Enter the desired length of the password: "))
-    complexity = input("Enter the complexity (low, medium, high): ").lower()
+    lower = "abcdefghijklmnopqrstuvwxyz"
+    upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    digits = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 !@#$%^&*()"
+    password = ""
 
-    if complexity not in ["low", "medium", "high"]:
-        print("Invalid complexity level.")
-        return
+    if var.get() == 1:
+        for i in range(0, length):
+            password = password + random.choice(lower)
+        return password
 
-    password = generate_password(length, complexity)
+    elif var.get() == 0:
+        for i in range(0, length):
+            password = password + random.choice(upper)
+        return password
 
-    print(f"\nGenerated Password: {password}")
+    elif var.get() == 3:
+        for i in range(0, length):
+            password = password + random.choice(digits)
+        return password
+    else:
+        print("Please choose an option")
 
-if __name__ == "__main__":
-    main()
 
+def generate():
+    password1 = low()
+    entry.insert(10, password1)
+
+
+def copy1():
+    random_password = entry.get()
+    pyperclip.copy(random_password)
+
+
+root = Tk()
+var = IntVar()
+var1 = IntVar()
+
+root.title("Random Password Generator")
+
+Random_password = Label(root, text="Password")
+Random_password.grid(row=0)
+entry = Entry(root)
+entry.grid(row=0, column=1)
+
+c_label = Label(root, text="Length")
+c_label.grid(row=1)
+
+
+copy_button = Button(root, text="Copy", command=copy1)
+copy_button.grid(row=0, column=2)
+generate_button = Button(root, text="Generate", command=generate)
+generate_button.grid(row=0, column=3)
+
+
+radio_low = Radiobutton(root, text="Low", variable=var, value=1)
+radio_low.grid(row=1, column=2, sticky='E')
+radio_middle = Radiobutton(root, text="Medium", variable=var, value=0)
+radio_middle.grid(row=1, column=3, sticky='E')
+radio_strong = Radiobutton(root, text="Strong", variable=var, value=3)
+radio_strong.grid(row=1, column=4, sticky='E')
+combo = Combobox(root, textvariable=var1)
+
+
+combo['values'] = (8, 9, 10, 11, 12, 13, 14, 15, 16,
+                   17, 18, 19, 20, 21, 22, 23, 24, 25,
+                   26, 27, 28, 29, 30, 31, 32, "Length")
+combo.current(0)
+combo.bind('<<ComboboxSelected>>')
+combo.grid(column=1, row=1)
+
+root.mainloop()
